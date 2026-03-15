@@ -24,14 +24,105 @@ double maclaurinSeries(double x, int n, double& lastTerm) {
 	// Пример для e^x
 	return maclaurinSin(x, n, lastTerm);
 }
+void testMaclaurinSin() {
+    cout << "===== ТЕСТИРОВАНИЕ ФУНКЦИИ maclaurinSin =====" << endl;
+
+    // Тест 1: Проверка при x = 0
+    cout << "\nТест 1: x = 0" << endl;
+    double lastTerm;
+    double result = maclaurinSin(0, 5, lastTerm);
+    cout << "Ожидаемое значение: 0.0" << endl;
+    cout << "Полученное значение: " << result << endl;
+    cout << "Последний член: " << lastTerm << endl;
+    cout << (abs(result - 0.0) < 1e-10 ? "✓ ТЕСТ ПРОЙДЕН" : "✗ ТЕСТ НЕ ПРОЙДЕН") << endl;
+
+    // Тест 2: Проверка при x = 1 (sin(1) ≈ 0.841471)
+    cout << "\nТест 2: x = 1, n = 10" << endl;
+    result = maclaurinSin(1, 10, lastTerm);
+    double expected = sin(1.0);
+    cout << "Ожидаемое значение (приблизительно): " << expected << endl;
+    cout << "Полученное значение: " << result << endl;
+    cout << "Погрешность: " << abs(expected - result) << endl;
+    cout << (abs(expected - result) < 1e-7 ? "✓ ТЕСТ ПРОЙДЕН" : "✗ ТЕСТ НЕ ПРОЙДЕН") << endl;
+
+    // Тест 3: Проверка при x = π/2 (sin(π/2) = 1)
+    cout << "\nТест 3: x = π/2, n = 15" << endl;
+    double pi = 3.141592653589793;
+    result = maclaurinSin(pi / 2, 15, lastTerm);
+    expected = sin(pi / 2);
+    cout << "Ожидаемое значение (приблизительно): " << expected << endl;
+    cout << "Полученное значение: " << result << endl;
+    cout << "Погрешность: " << abs(expected - result) << endl;
+    cout << (abs(expected - result) < 1e-7 ? "✓ ТЕСТ ПРОЙДЕН" : "✗ ТЕСТ НЕ ПРОЙДЕН") << endl;
+
+    // Тест 4: Проверка при отрицательном x
+    cout << "\nТест 4: x = -1, n = 15" << endl;
+    result = maclaurinSin(-1, 15, lastTerm);
+    expected = sin(-1.0);
+    cout << "Ожидаемое значение (приблизительно): " << expected << endl;
+    cout << "Полученное значение: " << result << endl;
+    cout << "Погрешность: " << abs(expected - result) << endl;
+    cout << (abs(expected - result) < 1e-7 ? "✓ ТЕСТ ПРОЙДЕН" : "✗ ТЕСТ НЕ ПРОЙДЕН") << endl;
+
+    // Тест 5: Проверка для малого n
+    cout << "\nТест 5: x = 1, n = 2 (должно быть 1 - 1/6 = 0.833333)" << endl;
+    result = maclaurinSin(1, 2, lastTerm);
+    cout << "Ожидаемое значение: 0.833333" << endl;
+    cout << "Полученное значение: " << result << endl;
+    cout << (abs(result - 0.833333) < 1e-5 ? "✓ ТЕСТ ПРОЙДЕН" : "✗ ТЕСТ НЕ ПРОЙДЕН") << endl;
+
+    cout << "\n===== ТЕСТИРОВАНИЕ ЗАВЕРШЕНО =====" << endl;
+}
+// Функция для автоматического тестирования с разными параметрами
+void autoTest() {
+    cout << "\n===== АВТОМАТИЧЕСКОЕ ТЕСТИРОВАНИЕ =====" << endl;
+
+    double testValues[] = { 0, 0.5, 1, 2, -0.5, -1 };
+    int ns[] = { 5, 10, 15 };
+
+    cout << setw(5) << "x" << setw(8) << "n" << setw(15) << "Результат"
+        << setw(15) << "sin(x)" << setw(15) << "Погрешность" << endl;
+    cout << "--------------------------------------------------------" << endl;
+
+    for (double x : testValues) {
+        for (int n : ns) {
+            double lastTerm;
+            double result = maclaurinSin(x, n, lastTerm);
+            double exact = sin(x);
+            double error = abs(exact - result);
+
+            cout << setw(5) << x << setw(8) << n << setw(15) << result
+                << setw(15) << exact << setw(15) << error << endl;
+        }
+    }
+}
+// Простая функция для проверки конкретного случая
+void checkCase(double x, int n) {
+    double lastTerm;
+    double result = maclaurinSin(x, n, lastTerm);
+    double exact = sin(x);
+
+    cout << "\nПроверка: x = " << x << ", n = " << n << endl;
+    cout << "Результат: " << result << endl;
+    cout << "Точное значение: " << exact << endl;
+    cout << "Погрешность: " << abs(exact - result) << endl;
+    cout << "Последний член: " << lastTerm << endl;
+}
 int main() {
     SetConsoleCP(65001);
     SetConsoleOutputCP(65001);
 
+    testMaclaurinSin();
+    autoTest();
+
+    cout << "\nПроверка конкретных случаев:" << endl;
+    checkCase(1.5, 8);
+    checkCase(-0.5, 10);
+
     double x, epsilon;
     int maxTerms;
 
-    cout << "Вычисление значений ряда Маклорена" << endl;
+    cout << "\n\nВычисление значений ряда Маклорена" << endl;
     cout << "Введите значение x: ";
     cin >> x;
     cout << "Введите количество членов ряда N: ";
